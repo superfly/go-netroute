@@ -100,9 +100,14 @@ func (l *linuxRouter) RouteWithSrc(input net.HardwareAddr, src net.IP, dst net.I
 		return nil, nil, nil, err
 	}
 
-	outIface, err := net.InterfaceByIndex(int(route.OutputIface))
+	outIface, err := linkByIndex(fd, int(route.OutputIface))
 	if err != nil {
-		return nil, nil, nil, fmt.Errorf("get interface by index: %w", err)
+		// net.InterfaceByIndex dumps every link, which is slow on hosts with
+		// many interfaces, but it stays correct if the direct lookup fails.
+		outIface, err = net.InterfaceByIndex(int(route.OutputIface))
+		if err != nil {
+			return nil, nil, nil, fmt.Errorf("get interface by index: %w", err)
+		}
 	}
 
 	if len(input) > 0 && iface != nil && len(iface.HardwareAddr) > 0 && !bytes.Equal(iface.HardwareAddr, input) {
