@@ -1,11 +1,11 @@
 module github.com/libp2p/go-netroute
 
-go 1.24
+go 1.25.0
 
 require (
 	github.com/stretchr/testify v1.10.0
-	golang.org/x/net v0.37.0
-	golang.org/x/sys v0.31.0
+	golang.org/x/net v0.55.0
+	golang.org/x/sys v0.45.0
 )
 
 require (
