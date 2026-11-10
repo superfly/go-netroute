@@ -100,7 +100,7 @@ func (l *linuxRouter) RouteWithSrc(input net.HardwareAddr, src net.IP, dst net.I
 		return nil, nil, nil, err
 	}
 
-	outIface, err := linkByIndex(fd, int(route.OutputIface))
+	outIface, err := cachedLinkByIndex(fd, int(route.OutputIface))
 	if err != nil {
 		// net.InterfaceByIndex dumps every link, which is slow on hosts with
 		// many interfaces, but it stays correct if the direct lookup fails.
