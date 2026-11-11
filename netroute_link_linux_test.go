@@ -68,9 +68,9 @@ func TestRouteInterfaceMatchesStdlib(t *testing.T) {
 	}
 }
 
-// BenchmarkRoute measures what a caller pays per lookup, including New(). Run
-// it with many interfaces present to see the effect of interface count, e.g.
-// in a network namespace with a few thousand dummy links.
+// BenchmarkRoute measures what a caller pays per repeated lookup, including
+// New(), which the route cache answers. BenchmarkRouteUncached measures the
+// kernel round trip behind it.
 func BenchmarkRoute(b *testing.B) {
 	dst := net.IPv4(127, 0, 0, 1)
 	for b.Loop() {

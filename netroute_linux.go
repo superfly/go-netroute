@@ -42,7 +42,13 @@ func (l *linuxRouter) RouteWithSrc(input net.HardwareAddr, src net.IP, dst net.I
 	if dst == nil || dst.IsUnspecified() {
 		return nil, nil, nil, errors.New("destination IP must be specified")
 	}
+	return cachedRoute(input, src, dst, func() (*net.Interface, net.IP, net.IP, error) {
+		return lookupRoute(input, src, dst)
+	})
+}
 
+// lookupRoute asks the kernel for the route with one RTM_GETROUTE request.
+func lookupRoute(input net.HardwareAddr, src net.IP, dst net.IP) (iface *net.Interface, gateway net.IP, preferredSrc net.IP, err error) {
 	// trim bytes if this is a v4 addr
 	if v4 := dst.To4(); v4 != nil {
 		dst = v4
